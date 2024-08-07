@@ -1,7 +1,7 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials
-from Functions.Function import AddTask, RemoveTask, UpdateTask, LoadTask
+from Functions.Function import AddTask, LoadTask, DisplayTask
 
 # Configuração do Firebase Admin SDK
 if not firebase_admin._apps:
@@ -15,64 +15,45 @@ if not firebase_admin._apps:
 
 st.set_page_config(page_title="Tarefas")
 
-
-# Função para exibir tarefas com cores do Streamlit
-def DisplayTask(user_id, task_list):
-    success_color = "#058034"
-    warning_color = "#F21010"
-
-    for task_key, task in task_list.items():
-        if task["status"] == "Done":
-            status_color = success_color
-        else:
-            status_color = warning_color
-
-        task_label = f"<div style='background-color: {status_color}; padding: 10px; margin-bottom: 5px; border-radius: 5px;'>{task['task']}</div>"
-        st.markdown(task_label, unsafe_allow_html=True)
-
-        col1, col2, col3 = st.columns([1, 1, 1])
-        with col1:
-            done_button = st.button(f"Tarefa concluída", key=f"done_{task_key}")
-        with col2:
-            pending_button = st.button(f"Tarefa pendente", key=f"pending_{task_key}")
-        with col3:
-            delete_button = st.button(f"Deletar tarefa", key=f"delete_{task_key}")
-
-        if done_button:
-            UpdateTask(user_id, task_key, "Done")
-            st.rerun()
-        if pending_button:
-            UpdateTask(user_id, task_key, "Pending")
-            st.rerun()
-        if delete_button:
-            RemoveTask(user_id, task_key)
-            st.rerun()
+# Sidebar com opções de categoria
+page = st.sidebar.radio(
+    "Selecione a página", ["Inserir tarefa", "Tarefas diárias", "Tarefas gerais"]
+)
 
 
-# Carregar as tarefas sem autenticação
-def task_manager_page():
+# Função principal para inserção e exibição de tarefas
+def Main():
     # Defina um ID de usuário fixo, ou modifique conforme necessário
     user_id = "default_user_id"
-    task_list = LoadTask(user_id) or {}
 
-    st.markdown(
-        "<h1 style='text-align: center;'>Lista de Tarefas</h1>", unsafe_allow_html=True
-    )
-    st.write("---")
+    if page == "Inserir tarefa":
+        # Campo para adicionar uma nova tarefa
+        st.markdown(
+            "<h1 style='text-align: center;'>Adicionar Nova Tarefa</h1>",
+            unsafe_allow_html=True,
+        )
+        new_task = st.text_area("Insira uma nova tarefa aqui:")
+        task_category = st.selectbox(
+            "Selecione a categoria da tarefa", ["Tarefas diárias", "Tarefas gerais"]
+        )
 
-    # Campo para adicionar uma nova tarefa
-    new_task = st.text_input("Insira uma nova tarefa aqui:")
+        if st.button("Adicionar Tarefa"):
+            if new_task == "":
+                st.error("Insira alguma tarefa")
+            else:
+                st.success("Tarefa inserida com sucesso")
+                AddTask(user_id, new_task, task_category)
 
-    if st.button("Adicionar Tarefa"):
-        if new_task == "":
-            st.error("Insira alguma tarefa")
-        else:
-            AddTask(user_id, new_task)
-            st.rerun()
+    else:
+        # Carregar e exibir tarefas com base na categoria selecionada na sidebar
+        task_list = LoadTask(user_id) or {}
 
-    # Exibir lista de tarefas com opções de status e exclusão
-    st.subheader("Tarefas")
-    DisplayTask(user_id, task_list)
+        st.markdown(
+            f"<h3 style='text-align: center;'>Tarefas: {page}</h3>",
+            unsafe_allow_html=True,
+        )
+        DisplayTask(user_id, task_list, page)
 
 
-task_manager_page()
+if __name__ == "__main__":
+    Main()
