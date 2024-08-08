@@ -1,45 +1,15 @@
 import streamlit as st
-from Functions.Function import AddTask, LoadTask, DisplayTask
-import firebase_admin
-from firebase_admin import credentials
-import os
-import json
+from Functions.Function import AddTask, LoadTask, DisplayTask, Auth, SetupFirebase
+
 
 # Configurações iniciais do Streamlit
 st.set_page_config(page_title="Tarefas", page_icon="📝")
 
-# Função de autenticação
-def authenticate(password):
-    if st.session_state.get("authenticated", False):
-        return True
-
-    # Obtenha a senha da variável de ambiente e log para depuração
-    app_password = os.getenv("APP_PASSWORD")
-    st.write(f"DEBUG: Stored password: {app_password}")  # Log de depuração
-
-    if password == app_password:
-        st.session_state.authenticated = True
-        return True
-
-    return False
-
-# Configurar o Firebase
-def setup_firebase():
-    if not firebase_admin._apps:
-        # Obtém as credenciais do Firebase das variáveis de ambiente
-        credentials_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-        cred = credentials.Certificate(json.loads(credentials_json))
-        # Obtém a databaseURL das variáveis de ambiente
-        database_url = os.getenv("DATABASE_URL")
-        firebase_admin.initialize_app(
-            cred,
-            {"databaseURL": database_url},
-        )
 
 # Função principal para inserção e exibição de tarefas
-def main_app():
+def App():
     st.sidebar.header("Desenvolvido por :red[Leandro Fernandes]", divider="gray")
-    
+
     # Sidebar com opções de categoria
     page = st.sidebar.radio(
         "Selecione a página",
@@ -86,23 +56,24 @@ def main_app():
         st.write("---")
         DisplayTask(user_id, task_list, page)
 
+
 if __name__ == "__main__":
-    setup_firebase()
+    SetupFirebase()
 
     if "authenticated" not in st.session_state:
         st.session_state.authenticated = False
 
     if not st.session_state.authenticated:
         st.markdown(
-            "<h1 style='text-align: center;'>Login</h1>",
+            "<h1 style='text-align: center;'>Gerenciamento de tarefas - Login</h1>",
             unsafe_allow_html=True,
         )
         password = st.text_input("Insira a senha:", type="password")
         if st.button("Entrar"):
-            if authenticate(password):
+            if Auth(password):
                 st.success("Autenticado com sucesso!")
-                st.experimental_rerun()  # Reexecuta a aplicação após autenticação bem-sucedida
+                st.rerun()
             else:
                 st.error("Senha incorreta. Tente novamente.")
     else:
-        main_app()
+        App()
