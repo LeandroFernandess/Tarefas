@@ -1,11 +1,6 @@
 import streamlit as st
-from Functions.Function import (
-    AddTask,
-    LoadTask,
-    DisplayTask,
-    SetupFirebase,
-    Authenticate,
-)
+from Functions.Function import AddTask, LoadTask, DisplayTask, Auth, SetupFirebase
+
 
 # Configurações iniciais do Streamlit
 st.set_page_config(page_title="Tarefas", page_icon="📝")
@@ -23,9 +18,7 @@ def App():
     st.sidebar.divider()
     st.sidebar.text(
         """
-        
         Sistema desenvolvido para realizar\nanotações do trabalho e demais\natividades.📖
-        
         """
     )
 
@@ -72,14 +65,14 @@ if __name__ == "__main__":
 
     if not st.session_state.authenticated:
         st.markdown(
-            "<h1 style='text-align: center;'>Gerenciamento de tarefas - Login</h1>",
+            "<h1 style='text-align: center;'>Login</h1>",
             unsafe_allow_html=True,
         )
         password = st.text_input("Insira a senha:", type="password")
         if st.button("Entrar"):
-            if Authenticate(password):
+            if Auth(password):
                 st.success("Autenticado com sucesso!")
-                st.rerun()
+                st.rerun()  # Reexecuta a aplicação após autenticação bem-sucedida
             else:
                 st.error("Senha incorreta. Tente novamente.")
     else:
