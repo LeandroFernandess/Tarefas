@@ -1,5 +1,30 @@
 from firebase_admin import db
 import streamlit as st
+import firebase_admin
+from firebase_admin import credentials
+
+
+# Configuração do Firebase Admin SDK
+def SetupFirebase():
+    if not firebase_admin._apps:
+        cred = credentials.Certificate("credentials.json")
+        firebase_admin.initialize_app(
+            cred,
+            {"databaseURL": "https://tarefas-9493e-default-rtdb.firebaseio.com"},
+        )
+
+
+# Função de autenticação
+def Authenticate(password):
+    if st.session_state.get("authenticated", False):
+        return True
+
+    # Verifica a senha inserida contra a senha armazenada em secrets
+    if password == st.secrets["app_password"]:
+        st.session_state.authenticated = True
+        return True
+
+    return False
 
 
 # Função para adicionar novas tarefas no Firebase
