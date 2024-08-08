@@ -81,7 +81,7 @@ streamlit run app.py
 Como Usar
 Tela de Login:
 
-Insira seu usuário e senha para acessar a aplicação. Usuários e senhas são definidos no arquivo secrets.toml.
+Insira sua senha para acessar a aplicação. Senhas são definidas no arquivo secrets.toml.
 
 Inserindo Tarefas:
 
