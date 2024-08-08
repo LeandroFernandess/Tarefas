@@ -23,7 +23,9 @@ def App():
     st.sidebar.divider()
     st.sidebar.text(
         """
+        
         Sistema desenvolvido para realizar\nanotações do trabalho e demais\natividades.📖
+        
         """
     )
 
