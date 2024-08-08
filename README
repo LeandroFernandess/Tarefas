@@ -1,0 +1,103 @@
+# Sistema de Tarefas com Streamlit e Firebase
+
+Este é um sistema de gerenciamento de tarefas desenvolvido com Streamlit e Firebase. Ele permite que usuários adicionem e visualizem tarefas diárias e gerais. A aplicação utiliza autenticação básica com senha para garantir a segurança das funcionalidades.
+
+## Funcionalidades
+
+- Adicionar uma nova tarefa
+- Visualizar tarefas diárias
+- Visualizar tarefas gerais
+- Autenticação básica
+
+## Tecnologias Utilizadas
+
+- [Streamlit](https://streamlit.io/)
+- [Firebase](https://firebase.google.com/)
+- [Python](https://www.python.org/)
+
+## Estrutura do Projeto
+
+SeuProjeto/ │ ├── app.py # Arquivo principal da aplicação ├── .gitignore # Arquivos a serem ignorados pelo Git ├── Functions/ │ └── Function.py # Funções utilizadas na aplicação ├── .streamlit/ │ └── secrets.toml # Arquivo de segredos para credenciais e senhas (não incluído publicamente) ├── credentials.json # Credenciais do Firebase (não incluído publicamente) └── README.md # Documentação do projeto
+
+
+## Configuração
+
+### Pré-requisitos
+
+- Python 3.7 ou superior
+- Um projeto Firebase configurado
+- Biblioteca `firebase-admin`
+- Biblioteca `streamlit`
+
+### Primeiros Passos
+
+1. **Clone o repositório:**
+
+   ```bash
+   git clone https://github.com/seuusuario/seuprojeto.git
+   cd seuprojeto
+
+Crie um ambiente virtual e ative-o:
+
+python -m venv venv
+source venv/bin/activate   # Para macOS/Linux
+venv\Scripts\activate      # Para Windows
+
+Instale as dependências:
+
+pip install -r requirements.txt
+
+Configuração do Firebase:
+
+Crie um arquivo credentials.json na raiz do seu projeto com as credenciais do Firebase.
+
+Example credentials.json content:
+
+{
+    "type": "service_account",
+    "project_id": "your_project_id",
+    "private_key_id": "your_private_key_id",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk@your_project_id.iam.gserviceaccount.com",
+    "client_id": "your_client_id",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk@your_project_id.iam.gserviceaccount.com"
+}
+
+Crie o arquivo de segredos (secrets.toml):
+
+No Streamlit Sharing, configure o arquivo secrets.toml com as seguintes informações (adicione mais usuários conforme necessário):
+
+app_password = "sua_senha"
+DATABASE_URL = "seu_databaseURL"
+GOOGLE_APPLICATION_CREDENTIALS = 'sua_chave_api'
+
+Execute a aplicação:
+
+streamlit run app.py
+
+Como Usar
+Tela de Login:
+
+Insira seu usuário e senha para acessar a aplicação. Usuários e senhas são definidos no arquivo secrets.toml.
+
+Inserindo Tarefas:
+
+Navegue para a página "Inserir tarefa" na barra lateral.
+Adicione sua tarefa e selecione a categoria ("Tarefas diárias" ou "Tarefas gerais").
+Clique no botão "Adicionar Tarefa".
+Visualizando Tarefas:
+
+Navegue para a página "Tarefas diárias" ou "Tarefas gerais" na barra lateral para visualizar as tarefas adicionadas.
+Contribuindo
+Fork o repositório
+Crie uma branch para sua feature (git checkout -b feature/fooBar)
+Commit suas mudanças (git commit -am 'Add some fooBar')
+Push para a branch (git push origin feature/fooBar)
+Abra uma Pull Request
+Licença
+Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para mais informações.
+
+Sinta-se à vontade para modificar e expandir esse README conforme necessário, incluindo informações adicionais sobre o seu projeto, instruções mais detalhadas ou qualquer outra coisa que você ache relevante.
